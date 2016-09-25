@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <title>单一按钮显示/隐藏</title>
+    <style>
+         body,h2,ul,li{
+             margin: 0;
+             padding: 0;
+         }
+        body{
+            font:14px/1.5 Tahoma;
+        }
+        #outer{
+            width: 250px;
+            border: 1px solid #93163e;
+            margin: 10px auto;
+        }
+        #outer h2{
+            cursor: pointer;
+            color: aliceblue;
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid;
+            height: 30px;
+            line-height: 30px;
+            padding-left: 10px;
+            background: #d5898a url("images/ico.gif") 230px 15px no-repeat;
+            border-color: #ffffff #fff5dd;
+        }
+        #outer h2.fold{
+            background-position: 230px -12px;
+        }
+        #outer ul{
+            border-top: 1px solid #fff5dd;
+            list-style-type: none;
+        }
+        #outer li{
+            height: 25px;
+            line-height: 25px;
+            background-color: #f6c3c6;
+            color: aliceblue;
+            vertical-align: top;
+        }
+        #outer a{
+            display: block;
+            color: #fff3f6;
+            text-decoration: none;
+            padding: 0 10px;
+        }
+        #outer a:hover{
+            background-color: #fff3f6;
+            color: #93163e;
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        window.onload = function ()
+        {
+            var oH2 = document.getElementsByTagName("h2")[0];
+            var oUl = document.getElementsByTagName("ul")[0];
+
+            oH2.onclick = function ()
+            {
+                var style = oUl.style;
+                style.display = style.display == "none" ? "block" : "none";
+                oH2.className = style.display == "none" ? "fold" : "";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="outer">
+        <h2>播放列表...</h2>
+        <ul>
+            <li><a href="#">玩家之徒 - 蔡依林</a></li>
+            <li><a href="#">原谅我就是这样的女生 - 戴佩妮</a></li>
+            <li><a href="#">猜不透 - 丁当</a></li>
+            <li><a href="#">自导自演 - 周杰伦</a></li>
+            <li><a href="#">浪漫窝 - 弦子</a></li>
+            <li><a href="#">流年 - 王菲</a></li>
+        </ul>
+    </div>
+</body>
+</html>

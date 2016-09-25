@@ -1,0 +1,40 @@
+body,ul,li{
+    margin: 0;
+    padding: 0;
+}
+body{
+    font: 14px/2.0 Tahoma;
+}
+#outer{
+    width: 600px;
+    margin: 10px auto;
+}
+#tab{
+    overflow: hidden;
+    zoom: 1;
+    background-color: #d55e5d;
+    border: 1px solid crimson;
+}
+#tab li{
+    float: left;
+    color: antiquewhite;
+    height: 40px;
+    cursor: pointer;
+    line-height: 40px;
+    list-style-type: none;
+    padding: 0 20px;
+}
+#tab li.current{
+    color: #e9f3fa;
+    background-color: #d59a9a;
+}
+#content{
+    border: 1px solid crimson;
+    border-top-width: 0;
+}
+#content ul{
+    line-height: 30px;
+    display: none;
+    margin: 0 30px;
+    padding: 10px 0;
+}
