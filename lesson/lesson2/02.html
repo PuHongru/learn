@@ -2,9 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>简易网页时钟</title>
+    <style>
+        body,div,p,span{
+            margin: 0;
+            padding: 0;
+        }
+        #clock{
+            width: 300px;
+            height: 80px;
+            margin: 10px auto;
+            border: 0;
+        }
+        #clock p{
+            font: bold 70px/70px 微软雅黑;
+            text-align: center;
+            color: #545454;
+        }
+        #clock span{
+            padding: 0 10px;
+        }
+    </style>
+    <script>
+        window.onload = function ()
+        {
+            var oSpan = document.getElementById("clock").getElementsByTagName("span");
+
+            var timer = setInterval(getTimes,1000);
+            getTimes();
+            function getTimes ()
+            {
+                var date = new Date();
+                var dateArray = [date.getHours(),date.getMinutes(),date.getSeconds()];
+
+                for (var i = 0;i < oSpan.length;i++)
+                {
+                    oSpan[i].innerHTML = format(dateArray[i]);
+                }
+            }
+            function format (a)
+            {
+                return a.toString().replace(/^(\d)$/,'0$1');
+            }
+        };
+    </script>
 </head>
 <body>
-
+    <div id="clock">
+        <p><span></span>:<span></span>:<span></span></p>
+    </div>
 </body>
 </html>
