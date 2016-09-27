@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>倒计时时钟</title>
+    <style>
+        body,div,p,span,button{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            font: 70px 微软雅黑;
+        }
+        #countdown{
+            width: 300px;
+            height: 200px;
+            margin: 10px auto;
+        }
+        #countdown p{
+            text-align: center;
+            color: #5c5c5c;
+        }
+        #countdown button{
+            float: left;
+            width: 60px;
+            height: 60px;
+            -webkit-border-radius: 60px;
+            -moz-border-radius: 60px;
+            border-radius: 60px;
+            border: 0;
+            margin: 10px 0 auto 60px;
+            background-color: #f6d4de;
+        }
+        #countdown button:hover{
+            cursor: pointer;
+        }
+        /*#countdown .start,#countdown .suspend{
+            background-color: #f6d4de;
+        }*/
+        #countdown .start{
+            color: #62c37a;
+        }
+        #countdown .cancel{
+            background-color: #f6d4de;
+            border: 1px solid #d55e5d;
+            color: #d55e5d;
+        }
+    </style>
+    <script>
+        window.onload = function ()
+        {
+            var oCountdown = document.getElementById("countdown");
+            var oSpan = oCountdown.getElementsByTagName("span");
+            var oBtns = oCountdown.getElementsByTagName("button");
+            var timer;
+
+            // 点击开始/取消按钮时
+            oBtns[1].onclick = function ()
+            {
+                if (oBtns[1].className == "start")
+                {
+                    oBtns[1].className = "cancel";
+                    oBtns[1].innerHTML = "取消";
+                    oBtns[0].disabled = false;
+                    if (oSpan[0].innerHTML == 0 && oSpan[1].innerHTML == 0)
+                    {
+                        oSpan[0].innerHTML = "01";
+                        oSpan[1].innerHTML = "10";
+                    }
+                    timer = setInterval(updateTime,1000);
+                    updateTime();
+                }
+                else if (oBtns[1].className == "cancel")
+                {
+                    oBtns[1].className = "start";
+                    clearInterval(timer);
+                    oSpan[0].innerHTML = "01";
+                    oSpan[1].innerHTML = "10";
+                    oBtns[0].disabled = true;
+                    oBtns[1].innerHTML = "开始计时";
+                    oBtns[0].innerHTML = "暂停";
+                    oBtns[0].disabled = true;
+                }
+            };
+
+            // 点击暂停按钮时
+            oBtns[0].onclick = function ()
+            {
+                if (oBtns[0].className == "suspend")
+                {
+                    oBtns[0].className = "continue";
+                    oBtns[0].innerHTML = "继续";
+                    clearInterval(timer);
+                }
+                else if (oBtns[0].className == "continue")
+                {
+                    oBtns[0].className = "suspend";
+                    oBtns[0].innerHTML = "暂停";
+                    timer = setInterval(updateTime,1000);
+                }
+            };
+
+            // updateTime 函数
+            function updateTime()
+            {
+                // 计算剩余的秒数
+                var oRemain = oSpan[0].innerHTML.toString().replace(/^0/,'') * 60 + parseInt(oSpan[1].innerHTML.toString().replace(/^0/,''));
+                // 当剩余秒数小于0时，清除计时器
+                if (oRemain <= 0)
+                {
+                    clearInterval(timer);
+                    oBtns[0].disabled = true;
+                    oBtns[0].className = "suspend";
+                    oBtns[0].innerHTML = "暂停";
+                    oBtns[1].className = "cancel";
+                    oBtns[1].innerHTML = "重新开始";
+                    return;
+                }
+                // 剩余秒数减1
+                oRemain--;
+                // 显示出剩余的时间
+                oSpan[0].innerHTML = format(parseInt(oRemain / 60));
+                oRemain%= 60;
+                oSpan[1].innerHTML = format(oRemain);
+            }
+
+            function format (a)
+            {
+                return a.toString().replace(/^(\d)$/,'0$1');
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="countdown">
+        <p><span>01</span>:<span>10</span></p>
+        <button class="suspend" disabled="disabled">暂停</button>
+        <button class="start">开始计时</button>
+    </div>
+</body>
+</html>
