@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>星级评分系统</title>
+    <style>
+        body,span,ul,li,p{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            font: 12px/1.5 Arial;
+            color: #666666;
+        }
+        ul{
+            list-style-type: none;
+        }
+        #star{
+            position: relative;
+            width: 600px;
+            margin: 10px auto;
+        }
+        #star span,#star ul{
+            float: left;
+            display: inline;
+            height: 19px;
+            line-height: 19px;
+        }
+        #star ul{
+            margin: 0 10px;
+        }
+        #star ul li{
+            float: left;
+            width: 24px;
+            background: url("images/star.png") no-repeat;
+            text-indent: -9999px;
+        }
+        #star ul li:hover{
+            cursor: pointer;
+        }
+        #star ul li.on{
+            background-position: 0 -28px;
+        }
+        #star strong{
+            color: #f60;
+        }
+        #star p{
+            position: absolute;
+            top: 20px;
+            width: 159px;
+            height: 60px;
+            display: none;
+            background: url("images/icon.gif") no-repeat;
+            padding: 7px 10px 0;
+        }
+        #star p em{
+            color: #f60;
+            display: block;
+            font-style: normal;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function ()
+        {
+            var oStar = document.getElementById("star"),
+                    oUl = oStar.getElementsByTagName("ul")[0],
+                    oLi = oUl.getElementsByTagName("li"),
+                    oSpan = oStar.getElementsByTagName("span")[1],
+                    oP = oStar.getElementsByTagName("p")[0],
+                    i = iScore = iStar = 0,
+                    aMsg = [
+                        "很不满意|差得太离谱，与卖家描述的严重不符，非常不满",
+                        "不满意|部分有破损，与卖家描述的不符，不满意",
+                        "一般|质量一般，没有卖家描述的那么好",
+                        "满意|质量不错，与卖家描述的基本一致，还是挺满意的",
+                        "非常满意|质量非常好，与卖家描述的完全一致，非常满意"
+                    ];
+
+            for (i = 0;i < oLi.length;i++)
+            {
+                oLi[i].index = i+1;
+
+                // 鼠标滑过时，显示分数
+                oLi[i].onmouseover = function ()
+                {
+                    // 调用评分函数,显示星星
+                    fnPoint(this.index);
+                    // 显示浮层
+                    oP.style.display = "block";
+                    // 显示浮层中的内容
+                    oP.innerHTML = "<em><b>" + this.index + "</b>分 " + aMsg[this.index - 1].match(/(.+)\|/)[1] + "</em>" + aMsg[this.index - 1].match(/\|(.+)/)[1];
+                    // 计算浮层出现的位置
+                    oP.style.left = oUl.offsetLeft + this.index * this.offsetWidth - 104 + "px";
+                };
+
+                // 鼠标移除时，浮层消失，星星显示为以前那么多
+                oLi[i].onmouseout = function ()
+                {
+                    // 浮层消失
+                    oP.style.display = "none";
+                    // 星星消失
+                    fnPoint();
+                };
+
+                // 鼠标点击后进行评分处理
+                oLi[i].onclick = function ()
+                {
+                    iStar = this.index;
+                    oP.style.display = "none";
+                    // 评分处理显示
+                    oSpan.innerHTML = "<strong>" + this.index + "</strong>分（" + aMsg[this.index-1].match(/\|(.+)/)[1] + "）";
+                }
+            }
+            function fnPoint(a) {
+                iScore = a || iStar;
+                for (i = 0;i < oLi.length;i++) oLi[i].className = "";
+                for (i = 0;i < iScore;i++) oLi[i].className = "on";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="star">
+        <span>点击星星就能打分</span>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+        </ul>
+        <span></span>
+        <p></p>
+    </div>
+</body>
+</html>
