@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模拟select控件</title>
+    <style>
+        html,body{
+            height: 100%;
+            overflow: hidden;
+        }
+        body,div,form,ul,span,a,li{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            font: 12px/1.5 \5fae\8f6f\96c5\9ed1;
+            background-color: #23384e;
+        }
+        ul{
+            list-style-type: none;
+        }
+        #search,#search .box,#search form,#search .select,#search a{
+            background: url("images/search.jpg") no-repeat;
+        }
+        #search{
+            position: relative;
+            width: 350px;
+            margin: 10px auto;
+        }
+        #search .box{
+            background-position: right 0;
+            height: 34px;
+        }
+        #search .box form{
+            height: 34px;
+            margin: 0 20px 0 40px;
+            background-position: 0 -34px;
+        }
+        #search .box .select{
+            float: left;
+            color: #ffffff;
+            width: 190px;
+            height: 22px;
+            line-height: 22px;
+            cursor: pointer;
+            margin-top: 4px;
+            padding-left: 10px;
+            background-position: 0 -68px;
+        }
+        #search .box a{
+            float: left;
+            display: block;
+            width: 80px;
+            height: 24px;
+            color: #333333;
+            text-decoration: none;
+            letter-spacing: 4px;
+            line-height: 24px;
+            text-align: center;
+            background-position: 0 -90px;
+            margin: 4px 0 0 10px;
+        }
+        #search .box a:hover{
+            background-position: -80px -90px;
+            color: #f60;
+        }
+        #search .sub{
+            display: none;
+            position: absolute;
+            top: 26px;
+            left: 40px;
+            color: #ffffff;
+            background-color: #2b2b2b;
+            width: 198px;
+            border: 1px solid #ffffff;
+        }
+        #search .sub li{
+            height: 25px;
+            line-height: 24px;
+            cursor: pointer;
+            padding-left: 10px;
+            margin-bottom: -1px;
+            border-bottom: 1px dotted #ffffff;
+        }
+        #search .sub li:hover{
+            background-color: #8b8b8b;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function ()
+        {
+            var oSearch = document.getElementById("search"),
+                    oSelect = oSearch.getElementsByClassName("select")[0],
+                    oSub = oSearch.getElementsByClassName("sub")[0],
+                    oLi = oSub.getElementsByTagName("li");
+
+            oSelect.onclick = function (event) {
+                console.log(oSub);
+                console.log(oSub.style.display);
+                //  这儿不能用oSub.style.display == "none"来判断，第一次点击时，没有display的值
+                oSub.style.display == "block" ? (oSub.style.display = "none") : (oSub.style.display = "block");
+                console.log(oSub.style.display);
+                // 阻止事件冒泡
+                (event || window.event).cancelBubble = true;
+                console.log(oSub.style.display);
+            };
+
+            // 鼠标点击选项
+            for (var i = 0;i < oLi.length;i++) {
+                oLi[i].onclick = function () {
+                    oSelect.innerHTML = this.innerHTML;
+                }
+            }
+
+            // 点击任何地方，列表收起
+            document.onclick = function () {
+                oSub.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="search">
+        <div class="box">
+            <form>
+                <span class="select">请选择游戏名称</span>
+                <a href="javascript:">搜索</a>
+            </form>
+        </div>
+        <ul class="sub">
+            <li>地下城与勇士</li>
+            <li>魔兽世界（国服）</li>
+            <li>魔兽世界（台服）</li>
+            <li>英雄联盟</li>
+            <li>倩女幽魂</li>
+            <li>梦幻西游</li>
+        </ul>
+    </div>
+</body>
+</html>
