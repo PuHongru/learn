@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>跟随鼠标移动（大图展示）</title>
+    <style>
+        body,div,ul,li,img{
+            margin: 0;
+            padding: 0;
+        }
+        body,html{
+            overflow: hidden;
+        }
+        #box ul{
+            width: 768px;
+            height: 172px;
+            margin: 10px auto;
+            list-style-type: none;
+        }
+        #box ul li{
+            float: left;
+            width: 170px;
+            height: 170px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        #box ul .active{
+            border: 1px solid #a10000;
+        }
+        #box li img{
+            width: 170px;
+            height: 170px;
+        }
+        #big{
+            display: none;
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border: 2px solid #ddd;
+        }
+        #big div{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            opacity:0.5;
+            -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+            background: #ffffff url(images/loading.gif) 50% 50% no-repeat;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            var aLi = document.getElementsByTagName("li"),
+                    oBig = document.getElementById("big"),
+                    oLoading = oBig.getElementsByTagName("div")[0];
+
+            for (var i = 0;i < aLi.length;i++) {
+                aLi[i].index = i;
+
+                // 鼠标滑过时，预加载图片并显示大图
+                aLi[i].onmouseover = function () {
+                    // 小图样式改变
+                    this.className = "active";
+                    // 创建待插入的img标签
+                    var oImg = document.createElement("img");
+                    // 图片预加载
+                    var img = new Image();
+                    img.src = oImg.src = this.getElementsByTagName("img")[0].src.replace(".jpg","_big.jpg");
+                    // 把创建的img标签插入到DOM树种
+                    oBig.appendChild(oImg);
+                    // 显示大图
+                    oBig.style.display = "block";
+                    // 判断大图是否加载成功,若加载成功则不显示oLoading，若没加载成功，则等oImg加载后执行函数
+                    img.complete ? oLoading.style.display = "none" : (oImg.onload = function () {
+                        oLoading.style.display = "none";
+                    })
+                };
+
+                // 鼠标移动时
+                aLi[i].onmousemove = function (event) {
+                    event = event || window.event;
+                    // iWidth是鼠标距离最左的距离
+                    // 注意这儿的documentElement,该属性返回文档的根节点
+                    var iWidth = document.documentElement.offsetWidth - event.clientX;
+                    // 计算大图到左边的距离，当iWidth-10px 的距离小于大图的宽度时，大图鼠标左边显示
+                    oBig.style.left = (iWidth - 10) < oBig.offsetWidth ? (event.clientX - oBig.offsetWidth -10 + "px") : (event.clientX + 10 + "px");
+                    // 计算y轴上到顶部的距离
+                    oBig.style.top = event.clientY + 20 + "px";
+                };
+
+                // 鼠标移除小图时
+                aLi[i].onmouseout = function () {
+                    // 小图样式取消
+                    this.className = "";
+                    // 大图不显示
+                    oBig.style.display = "none";
+                    // 删除big中的img
+                    oBig.removeChild(oBig.lastChild);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="box">
+        <ul>
+            <li><img src="images/shirt_1.jpg"></li>
+            <li><img src="images/shirt_2.jpg"></li>
+            <li><img src="images/shirt_3.jpg"/></li>
+            <li><img src="images/shirt_4.jpg"/></li>
+        </ul>
+    </div>
+    <div id="big"><div></div></div>
+</body>
+</html>
