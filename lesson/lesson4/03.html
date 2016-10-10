@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用键盘控制div</title>
+    <style>
+        body,html{
+            overflow: hidden;
+        }
+        body,pre,div{
+            margin: 0;
+            padding: 0;
+        }
+        pre{
+            color: green;
+            border: 1px dotted #333333;
+            background-color: #f0f0f0;
+            padding: 10px 15px;
+            margin: 12px;
+            font: 12px/1.5 Courier New;
+        }
+        #box{
+            position: absolute;
+            top: 50px;
+            left: 300px;
+            width: 100px;
+            height: 100px;
+            background-color: #d55e5d;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            var oBox = document.getElementById("box");
+            var bLeft = bTop = bRight = bBottom = bCtrl = false;
+
+            // 上下左右滑动
+            setInterval(function () {
+                if (bLeft) {
+                    oBox.style.left = oBox.offsetLeft - 10 + "px";
+                }
+                else if (bRight) {
+                    oBox.style.left = oBox.offsetLeft + 10 + "px";
+                }
+                if (bTop) {
+                    oBox.style.top = oBox.offsetTop - 10 +"px";
+                }
+                else if (bBottom) {
+                    oBox.style.top = oBox.offsetTop + 10 + "px";
+                }
+                //  防止溢出
+                limit();
+            },30);
+
+            // 按下键盘
+            document.onkeydown = function (event) {
+                event = event || window.event;
+                bCtrl = event.ctrlKey;
+                switch (event.keyCode) {
+                    case 37 :  //  ←
+                        bLeft = true;
+                        break;
+                    case 39 :  //  →
+                        bRight = true;
+                        break;
+                    case 38 :  //  ↑
+                        if (bCtrl) {  // Ctrl + ↑
+                            var oldWidth = oBox.offsetWidth;
+                            var oldHeight = oBox.offsetHeight;
+                            //  改变box大小
+                            oBox.style.width = oldWidth * 1.5 + "px";
+                            oBox.style.height = oldHeight * 1.5 + "px";
+                            //  改变位置，使得显示效果为从中间向四周扩大
+                            oBox.style.left = oBox.offsetLeft - (oBox.offsetWidth - oldWidth) / 2 + "px";
+                            oBox.style.top = oBox.offsetTop - (oBox.offsetHeight - oldHeight) / 2 + "px";
+                        }
+                        else {
+                            bTop = true;
+                        }
+                        break;
+                    case 40 :  //  ↓
+                        if (bCtrl) {  // Ctrl + ↓
+                            var oldWidth = oBox.offsetWidth;
+                            var oldHeight = oBox.offsetHeight;
+                            //  改变box大小
+                            oBox.style.width = oldWidth * 0.75 + "px";
+                            oBox.style.height = oldHeight * 0.75 + "px";
+                            //  改变box位置
+                            oBox.style.left = oBox.offsetLeft + (oldWidth - oBox.offsetWidth) / 2 + "px";
+                            oBox.style.top = oBox.offsetTop + (oldHeight - oBox.offsetHeight) / 2 + "px";
+                        }
+                        else{
+                            bBottom = true;
+                        }
+                        break;
+                    case 49 :  // 1
+                        if (bCtrl) {
+                            oBox.style.backgroundColor = "green";
+                        }
+                        break;
+                    case 50 :  //  2
+                        bCtrl && (oBox.style.backgroundColor = "yellow");
+                        break;
+                    case 51 :  // 3
+                        bCtrl && (oBox.style.backgroundColor = "red");
+                        break;
+                }
+                //  阻止事件默认动作
+                return false;
+            };
+
+            //  松开键盘时
+            document.onkeyup = function (event) {
+                event = event || window.event;
+                switch (event.keyCode) {
+                    case 37 :  //  ←
+                        bLeft = false;
+                        break;
+                    case 39 :  //  →
+                        bRight = false;
+                        break;
+                    case 38 :  // ↑
+                        bTop = false;
+                        break;
+                    case 40 :  //  ↓
+                        bBottom = false;
+                        break;
+                }
+            };
+
+            // 防止溢出函数
+            function limit () {
+                //  注意clientWidth和offsetWidth的区别
+                var docWidth = document.documentElement.clientWidth,
+                        docHeight = document.documentElement.clientHeight;
+                console.log(docHeight);
+                oBox.offsetLeft <= 0 && (oBox.style.left = 0);
+                oBox.offsetLeft >= (docWidth - oBox.offsetWidth) && (oBox.style.left = docWidth - oBox.offsetWidth + "px");
+                oBox.offsetTop <=0 && (oBox.style.top = 0);
+                oBox.offsetTop >= (docHeight - oBox.offsetHeight) && (oBox.style.top = docHeight - oBox.offsetHeight + "px");
+            }
+        }
+    </script>
+</head>
+<body>
+    <pre>红色方块为键盘操作区域，您可以进行如下操作：
+
+上：↑ 下：↓ 左：← 右：→
+
+Ctrl + 1 : 背景变为绿色
+Ctrl + 2 : 背景变为黄色
+Ctrl + 3 : 背景变为红色
+Ctrl + ↑: 放大
+Ctrl + ↓: 缩小</pre>
+    <div id="box"></div>
+</body>
+</html>
