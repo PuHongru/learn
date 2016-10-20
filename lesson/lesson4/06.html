@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>仿腾讯微博效果</title>
+    <style>
+        body,div,form,h2,input,p,img,ul,span,strong,h3{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            color: #333333;
+            background-color: #3c3a3b;
+            font: 12px/1.5 \5b8b\4f53;
+        }
+        a{
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: underline;
+        }
+        ul{
+            list-style-type: none;
+        }
+        #msgBox{
+            width: 500px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            margin: 10px auto;
+            background-color: #ffffff;
+            padding-top: 10px;
+        }
+
+        /**form部分的样式**/
+        #msgBox form{
+            background: url("images/boxBG.jpg") repeat-x 0 bottom;
+            padding: 0 20px 15px;
+        }
+        #msgBox form h2{
+            font: 400 18px/1.5 \5fae\8f6f\96c5\9ed1;
+        }
+        #msgBox form div{
+            position: relative;
+            color: #999;
+            margin-top: 10px;
+        }
+        #msgBox #userName,#msgBox form #conBox{
+            color: #777;
+            border: 1px solid #d0d0d0;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background: url("images/inputBG.png") repeat-x;
+            padding: 3px 5px;
+            font: 14px/1.5 Arial;
+        }
+        #userName .active,#conBox .active{
+            border: 1px solid #7abb2c;
+        }
+        #msgBox form #userName{
+            height: 20px;
+        }
+        #msgBox #conBox{
+            width: 448px;
+            resize: none;
+            height: 65px;
+            overflow: auto;
+        }
+        #msgBox img{
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+        }
+        #msgBox form #face{
+            position: absolute;
+            top: 0;
+            left: 172px;
+        }
+        #msgBox #face img{
+            width: 30px;
+            height: 30px;
+            border: 0;
+            cursor: pointer;
+            opacity: 0.5;
+            -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+        }
+        #msgBox #face img.hover,#msgBox #face img.current{
+            width: 28px;
+            height: 28px;
+            border: 1px solid #f60;
+            opacity: 1;
+            -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+            filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+        }
+        #msgBox form .tr{
+            overflow: hidden;
+            zoom: 1;
+        }
+        #msgBox .tr *{
+            float: left;
+        }
+        #msgBox .tr p{
+            float: right;
+            line-height: 30px;
+        }
+        #msgBox .tr .maxNum{
+            font: 26px/30px Georgia, Tahoma, Arial;
+            padding: 0 5px;
+        }
+        #msgBox .tr #sendBtn{
+            border: 0;
+            width: 112px;
+            height: 30px;
+            background: url("images/btn.png") no-repeat;
+            margin-left: 10px;
+            padding: 1px 6px;
+            cursor: pointer;
+        }
+        #msgBox .tr #sendBtn:hover{
+            background-position: 0 -30px;
+        }
+
+
+        /*消息列表样式*/
+        #msgBox .list{
+            padding: 10px;
+        }
+        #msgBox .list h3{
+            position: relative;
+            height: 33px;
+            font-size: 14px;
+            font-weight: 400;
+            background-color: #e3eaec;
+            border: 1px solid #dee4e7;
+        }
+        #msgBox .list h3 span{
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background-color: #ffffff;
+            display: block;
+            line-height: 28px;
+            padding: 0 15px;
+        }
+        #msgBox .list ul{
+            overflow: hidden;
+            zoom: 1;
+        }
+        #msgBox .list li{
+            float: left;
+            clear: both;
+            width: 100%;
+            border-bottom: 1px dashed #d8d8d8;
+            padding: 10px 0;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+        #msgBox .list li .userPic{
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+            border: 1px solid #cccccc;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+        }
+        #msgBox .list li .content{
+            float: left;
+            width: 400px;
+            font: 14px/1.5 Arial;
+            word-wrap: break-word;
+            margin-left: 10px;
+        }
+        #msgBox .content .userName{
+            display: inline;
+            padding-right: 5px;
+        }
+        #msgBox .content .msgInfo{
+            display: inline;
+            word-wrap: break-word;
+        }
+        #msgBox .content .times{
+            color: #889db6;
+            font: 12px/18px Arial;
+            margin-top: 5px;
+            overflow: hidden;
+            zoom: 1;
+        }
+        #msgBox .userPic img{
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+        }
+        #msgBox .content .userName a{
+            color: #2b4a78;
+        }
+        #msgBox .content .times span{
+            float: left;
+        }
+        #msgBox .content .times a{
+            float: right;
+            color: #889db6;
+            display: none;
+        }
+        #msgBox .list li:hover{
+            background-color: #f5f5f5;
+        }
+    </style>
+    <script type="text/javascript">
+        /*---------------------------+
+        获取id,class,tagName
+        +---------------------------*/
+        var get = {
+            byId : function (id) {
+                return typeof id === "string" ? document.getElementById(id) : id;
+            },
+            byClass : function (sClass,oParent) {
+                var aClass = [];
+                var reClass = new RegExp("(^| )"+ sClass + "( |$)");
+                var aElem = this.byTagName("*",oParent);
+                for (var i = 0;i < aElem.length;i++) {
+                    reClass.test(aElem[i].className) && aClass.push(aElem[i]);
+                }
+                return aClass;
+            },
+            byTagName : function (elem,obj) {
+                return (obj || document).getElementsByTagName(elem);
+            }
+        };
+        /*---------------------------+
+         事件绑定，删除
+         +---------------------------*/
+        var EventUtil = {
+            addHandler : function (element,type,handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(type,handler,false);
+                } else if (element.attachEvent) {
+                    element.attachEvent("on" + type,handler);
+                } else {
+                    element["on" + type] = handler;
+                }
+            },
+            removeHandler : function (element, type, handler) {
+                if (element.removeEventListener) {
+                    element.removeEventListener(type, handler, false);
+                } else if (elment.detachEvent) {
+                    element.detachEvent("on" + type, handler);
+                } else {
+                    element["on" + type] = null;
+                }
+            }
+        };
+        /*---------------------------+
+         读取css样式
+         设置css样式
+         +---------------------------*/
+        function css (element,attr,value) {
+            switch (arguments.length) {
+                case 2 :
+                    if (typeof arguments[1] == "object") {
+                        for (var i in attr) {
+                            i == "opacity" ? (element.style[i] = attr[i] / 100, element.style["filter"] = "alpha(opacity = " + attr[i] + ")") : (element.style[i] = attr[i]);
+                        }
+                    }
+                    else {
+                        return element.currentStyle ? (element.currentStyle) : (window.getComputedStyle(element,null)[attr])
+                    }
+                    break;
+                case 3 :
+                    attr == "opacity" ? (element.style[attr] = value / 100, element.style["filter"] = "alpha(opacity = " + value + ")") : element.style[attr] = value;
+                    break;
+            }
+        }
+        /*主要函数*/
+        EventUtil.addHandler(window, "load" ,function () {
+            var oMsgBox = get.byId("msgBox"),
+                    oUserName = get.byId("userName"),
+                    oFace = get.byId("face"),
+                    currentFace = get.byClass("current",oFace)[0],
+                    oConBox = get.byId("conBox"),
+                    oSendBtn = get.byId("sendBtn"),
+                    oCountText = get.byClass("countText",oMsgBox)[0],
+                    oMaxNum = get.byClass("maxNum",oMsgBox)[0],
+                    oList = get.byClass("list",oMsgBox)[0],
+                    oUl = get.byTagName("ul",oList)[0],
+                    aLi = get.byTagName("li",oUl),
+                    aImg = get.byTagName("img",oFace),
+                    bSend = true,
+                    timer = null,
+                    maxNum = 140;
+
+            //  禁止表单提交
+            EventUtil.addHandler(get.byTagName("form",oMsgBox)[0], "submit", function () {
+                return false;
+            });
+
+            //  点击广播按钮时触发广播函数
+            EventUtil.addHandler(oSendBtn, "click", fnSend);
+
+            //  使用Ctrl+Enter快捷键时触发广播函数
+            EventUtil.addHandler(document, "keyup", function (event) {
+                event = event || window.event;
+                event.ctrlKey && event.keyCode == 13 && fnSend();
+            });
+
+            //  广播函数fnSend
+            function fnSend () {
+                var reg = /^\s*$/g;
+                if (reg.test(oUserName.value)) {
+                    alert("\u8bf7\u586b\u5199\u60a8\u7684\u59d3\u540d");
+                    oUserName.focus();
+                } else if (!/^[u4e00-\u9fa5\w]{2,8}$/g) {
+                    alert("\u59d3\u540d\u7531\u0032\u002d\u0038\u4f4d\u5b57\u6bcd\u3001\u6570\u5b57\u3001\u4e0b\u5212\u7ebf\u3001\u6c49\u5b57\u7ec4\u6210\uff01");
+                    oUserName.focus();
+                } else if (reg.test(oConBox.value)) {
+                    alert("\u968f\u4fbf\u8bf4\u70b9\u4ec0\u4e48\u5427\uff01");
+                    oConBox.focus();
+                } else if (!bSend) {
+                    alert("\u4f60\u8f93\u5165\u7684\u5185\u5bb9\u5df2\u8d85\u51fa\u9650\u5236\uff0c\u8bf7\u68c0\u67e5\uff01");
+                    oConBox.focus();
+                } else {
+                    var oLi = document.createElement("li");
+                    var oDate = new Date();
+                    oLi.innerHTML = "<div class = \"userPic\"><img src = \"" + get.byClass("current",oFace)[0].src + "\"><\/div>" +
+                            "<div class = \"content\">" +
+                            "<div class = \"userName\"><a href = \"javascript:\">" + oUserName.value + "<\/a>：<\/div>" +
+                            "<div class = \"msgInfo\">" + oConBox.value + "<\/div>" +
+                            "<div class = \"times\"><span>" + format(oDate.getMonth() + 1) + "\u6708" + format(oDate.getDate()) + "\u65e5 " + format(oDate.getHours()) + ":" + format(oDate.getMinutes()) + "<\/span><a href=\"javascript:\" class=\"del\">删除<\/a><\/div>" +
+                            "<\/div>";
+                    // 插入元素
+                    aLi.length ? oUl.insertBefore(oLi,aLi[0]) : oUl.appendChild(oLi);
+
+                    // 重置表单
+                    get.byTagName("form",oMsgBox)[0].reset();
+                    for (var i = 0;i < aImg.length;i++)  aImg[i].className = "";
+                    aImg[0].className = "current";
+
+                    // 渲染增加微博的效果
+                    // 将元素高度保存
+                    var iHeight = oLi.clientHeight - parseFloat(css(oLi,"paddingTop")) - parseFloat(css(oLi,"paddingBottom"));
+                    var alpha = 0;
+                    var count = 0;
+                    css(oLi,{"opacity":"0","height":"0"});
+                    timer = setInterval(function () {
+                        css(oLi,{"display":"block","opacity":"0","height":(count += 8) + "px"});
+                        if (count > iHeight) {
+                            clearInterval(timer);
+                            css(oLi,"height",iHeight + "px");
+                            timer = setInterval(function () {
+                                css(oLi,"opacity",alpha += 10);
+                                alpha > 100 && (clearInterval(timer), css(oLi,"opacity",100));
+                            },30);
+                        }
+                    },30);
+                }
+                liHover();
+                liDel();
+            }
+
+            //  从li上滑过，显示删除
+            function liHover () {
+                for (var i = 0;i < aLi.length;i++) {
+                    aLi[i].onmouseover = function () {
+                        get.byClass("del",this)[0].style.display = "block";
+                    };
+                    aLi[i].onmouseout = function () {
+                        get.byClass("del",this)[0].style.display = "none";
+                    }
+                }
+            }
+            liHover();
+
+            //  删除函数liDel()
+            function liDel () {
+                var aDel = get.byClass("del",oUl);
+                for (var i = 0;i < aDel.length;i++) {
+                    aDel[i].onclick = function () {
+                        var oParent = this.parentNode.parentNode.parentNode;
+                        console.log(oParent);
+                        var alpha = 100;
+                        var iHeight = oParent.offsetHeight;
+                        timer = setInterval(function () {
+                            css(oParent,{"opacity":alpha -= 10});
+                            if (alpha < 0) {
+                                clearInterval(timer);
+                                alpha = 0 && css(oParent,"opacity",0);
+                                timer = setInterval(function () {
+                                    css(oParent,"height",(iHeight -= 8) + "px");
+                                    (iHeight < 0) && (clearInterval(timer),css(oParent,"height",0),oUl.removeChild(oParent));
+                                },30);
+                            }
+                        },30);
+                    }
+                }
+            }
+            liDel();
+
+            EventUtil.addHandler(oConBox,"keyup",confine);
+            EventUtil.addHandler(oConBox,"focus",confine);
+            EventUtil.addHandler(oConBox,"change",confine);
+
+            //  输入字符限制函数 confine()
+            function confine () {
+                var iLen = 0;
+                for (var i = 0;i < oConBox.value.length;i++) {
+                    iLen += (/[^\x00-\xff]/.test(oConBox.value[i])) ? 1 : 0.5;
+                }
+                oMaxNum.innerHTML = Math.abs(maxNum - Math.floor(iLen));
+                (maxNum >= Math.floor(iLen)) ? (oCountText.innerHTML = "\u8fd8\u80fd\u8f93\u5165",css(oMaxNum,"color",""),bSend = true) : (oCountText.innerHTML = "\u5df2\u8d85\u51fa",css(oMaxNum,"color","#f60"),bSend = false);
+            }
+
+            //  格式化时间
+            function format (time) {
+                return time.toString().replace(/^(\d)$/,'0$1');
+            }
+
+            //  头像
+            for (var i = 0; i < aImg.length;i++) {
+                aImg[i].onmouseover = function () {
+                    this.className += " hover";
+                };
+                aImg[i].onmouseout = function () {
+                    this.className = this.className.replace(/\s?hover/,"");
+                };
+                aImg[i].onclick = function () {
+                    for (var i = 0;i < aImg.length;i++) {
+                        aImg[i].className = "";
+                    }
+                    this.className = "current";
+                }
+            }
+        })
+    </script>
+</head>
+<body>
+    <div id="msgBox">
+        <form>
+            <h2>来，说说你在做什么，想什么</h2>
+            <div>
+                <input id="userName" class="f-text" value="">
+                <p id="face">
+                    <img src="images/face1.gif" class="current">
+                    <img src="images/face2.gif">
+                    <img src="images/face3.gif">
+                    <img src="images/face4.gif">
+                    <img src="images/face5.gif">
+                    <img src="images/face6.gif">
+                    <img src="images/face7.gif">
+                    <img src="images/face8.gif">
+                </p>
+            </div>
+            <div><textarea id="conBox" class="f-text"></textarea></div>
+            <div class="tr">
+                <p><span class="countText">还能输入</span><strong class="maxNum">140</strong><span>个字</span><input id="sendBtn" type="button" value="" title="快捷键 Ctrl+Enter"></p>
+            </div>
+        </form>
+        <div class="list">
+            <h3><span>大家在说</span></h3>
+            <ul>
+                <li>
+                    <div class="userPic"><img src="images/face.gif"></div>
+                    <div class="content">
+                        <div class="userName"><a href="javascript:">蒲泓儒</a>：</div>
+                        <div class="msgInfo">新增删除微博功能。</div>
+                        <div class="times"><span>10月17日 10:02</span><a href="javascript:" class="del">删除</a></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="userPic"><img src="images/face.gif"></div>
+                    <div class="content">
+                        <div class="userName"><a href="javascript:">蒲泓儒</a>：</div>
+                        <div class="msgInfo">新增删除微博功能。</div>
+                        <div class="times"><span>10月17日 10:02</span><a href="javascript:" class="del">删除</a></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="userPic"><img src="images/face.gif"></div>
+                    <div class="content">
+                        <div class="userName"><a href="javascript:">蒲泓儒</a>：</div>
+                        <div class="msgInfo">新增删除微博功能。</div>
+                        <div class="times"><span>10月17日 10:02</span><a href="javascript:" class="del">删除</a></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="userPic"><img src="images/face.gif"></div>
+                    <div class="content">
+                        <div class="userName"><a href="javascript:">蒲泓儒</a>：</div>
+                        <div class="msgInfo">fasdfasdfadsfasdfsfaewaerawfsdfjisakdhfiashdfoiadkfnaskldnfaishfiwejaoijfkna,sdnfaisdhfjiaewjfoaiwjekanf,ansdfashdfiasdfjkadlsnfa,sdnfasdknfaksdlnfasmdnfasdkjfhnasdklfhadklsfnlasdkf</div>
+                        <div class="times"><span>10月17日 10:02</span><a href="javascript:" class="del">删除</a></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="userPic"><img src="images/face.gif"></div>
+                    <div class="content">
+                        <div class="userName"><a href="javascript:">蒲泓儒</a>：</div>
+                        <div class="msgInfo">新增删除微博功能。</div>
+                        <div class="times"><span>10月17日 10:02</span><a href="javascript:" class="del">删除</a></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
