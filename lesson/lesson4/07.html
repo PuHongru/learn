@@ -21,11 +21,11 @@
         p{
             text-align: center;
         }
-        /*#rightMenu{
+        #rightMenu{
             position: absolute;
             top: -9999px;
             left: -9999px;
-        }*/
+        }
         #rightMenu ul{
             float: left;
             border: 1px solid #979797;
@@ -75,6 +75,7 @@
                 return obj.offsetTop + (obj.offsetParent ? this.top(obj.offsetParent) : 0)
             }
         };
+
         window.onload = function () {
             var rightMenu = document.getElementById("rightMenu"),
                     aUl = rightMenu.getElementsByTagName("ul"),
@@ -82,8 +83,11 @@
             var showTimer = null,
                     hideTimer = null;
             var maxWidth = 0,
-                    minWidth = 0;
+                    maxHeight = 0;
             var i = 0;
+            var aDoc = [document.documentElement.offsetWidth,document.documentElement.offsetHeight];
+
+            rightMenu.style.display = "none";
 
             for (i = 0;i < aLi.length;i++) {
                 // 为含有子菜单的li加上箭头
@@ -91,18 +95,72 @@
                 // 鼠标移入时,加入active样式
                 aLi[i].onmouseover = function () {
                     var oThis = this;
+                    var oUl = oThis.getElementsByTagName("ul");
 
                     oThis.className = this.className + " active";
-                    if(oThis.getElementsByTagName("ul")[0]){
-                        oThis.getElementsByTagName("ul")[0].style.display = "block";
+                    if(oUl[0]){
+                        clearTimeout(hideTimer);
+                        showTimer = setTimeout(function () {
+                            for (i = 0;i < oThis.parentNode.children.length;i++) {
+                                oThis.parentNode.children[i].getElementsByTagName("ul")[0] &&
+                                (oThis.parentNode.children[i].getElementsByTagName("ul")[0].style.display = "none");
+                            }
+                            oUl[0].style.display = "block";
+                            setWidth(oUl[0]);
+                            oUl[0].style.top = oThis.offsetTop + "px";
+                            oUl[0].style.left = oThis.offsetLeft + oThis.offsetWidth + "px";
+
+                            // 计算最大的宽度和高度，以防止溢出
+                            maxWidth = aDoc[0] - getOffset.left(oThis) - oThis.offsetWidth;
+                            maxHeight = aDoc[1] - getOffset.top(oThis);
+                            (oUl[0].offsetWidth > maxWidth) && (oUl[0].style.left = - oUl[0].offsetWidth + "px");
+                            (oUl[0].offsetHeight > maxHeight) && (oUl[0].style.top = oThis.offsetTop - oUl[0].offsetHeight + oThis.offsetHeight + "px");
+
+                        },300)
                     }
                 };
                 // 鼠标移除时
                 aLi[i].onmouseout = function () {
+                    var oThis = this;
+                    var oUl = oThis.getElementsByTagName("ul");
+
                     this.className = this.className.replace(/\s?active/,"");
+                    if(oUl[0]) {
+                        clearTimeout(showTimer);
+                        hideTimer = setTimeout(function () {
+                            for (i = 0;i < oThis.parentNode.children.length;i++) {
+                                oThis.parentNode.children[i].getElementsByTagName("ul")[0] &&
+                                (oThis.parentNode.children[i].getElementsByTagName("ul")[0].style.display = "none");
+                            }
+                        },300);
+                    }
                 }
             }
-            setWidth(aUl[0]);
+
+            // 自定义右键菜单
+            document.oncontextmenu = function (event) {
+                event = event || window.event;
+                rightMenu.style.display = "block";
+                rightMenu.style.top = event.clientY + "px";
+                rightMenu.style.left = event.clientX + "px";
+
+                setWidth(rightMenu.getElementsByTagName("ul")[0]);
+
+                //  得到最大的宽度和高度，以防止溢出
+                maxWidth = aDoc[0] - rightMenu.getElementsByTagName("ul")[0].offsetWidth;
+                maxHeight = aDoc[1] - rightMenu.getElementsByTagName("ul")[0].offsetHeight;
+
+                // 防止溢出
+                (event.clientX > maxWidth) && (rightMenu.style.left = maxWidth + "px");
+                (event.clientY > maxHeight) && (rightMenu.style.top = maxHeight + "px");
+
+                return false;
+            };
+
+            document.onclick = function () {
+                rightMenu.style.display = "none";
+            };
+
             // li中最大的宽度，并把赋值给同级所有li
             function setWidth (obj) {
                 maxWidth = 0;
