@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <title>自定义多级右键菜单</title>
+    <style type="text/css">
+        html,body{
+            height: 100%;
+            overflow: hidden;
+        }
+        body,div,p,ul,li{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            font: 12px/1.5 \5fae\8f6f\96c5\9ed1;
+        }
+        ul{
+            list-style: none;
+        }
+        p{
+            text-align: center;
+        }
+        /*#rightMenu{
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }*/
+        #rightMenu ul{
+            float: left;
+            border: 1px solid #979797;
+            background: #f1f1f1 url("images/line.png") repeat-y 24px 0;
+            padding: 2px;
+            -webkit-box-shadow:2px 2px 2px rgba(0,0,0,0.6);
+            -moz-box-shadow:2px 2px 2px rgba(0,0,0,0.6);
+            box-shadow:2px 2px 2px rgba(0,0,0,0.6);
+        }
+        #rightMenu ul li{
+            float: left;
+            clear: both;
+            height: 24px;
+            line-height: 24px;
+            cursor: pointer;
+            white-space: nowrap;
+            padding: 0 30px;
+        }
+        #rightMenu ul li.sub{
+            background: url("images/arrow.png") no-repeat right 9px;
+        }
+        #rightMenu ul li.active{
+            background-color: #f1f2f3;
+            border: 1px solid #aecff7;
+            height: 22px;
+            line-height: 22px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            padding: 0 29px;
+            /*background-position: right -8px;*/
+        }
+        #rightMenu ul ul{
+            display: none;
+            position: absolute;
+        }
+    </style>
+    <script type="text/javascript">
+        /***************************************
+         * 元素到网页顶部和网页左侧的距离
+         * *************************************/
+        var getOffset = {
+            left : function (obj) {
+                return obj.offsetLeft + (obj.offsetParent ? this.left(obj.offsetParent) : 0);
+            },
+            top : function (obj) {
+                return obj.offsetTop + (obj.offsetParent ? this.top(obj.offsetParent) : 0)
+            }
+        };
+        window.onload = function () {
+            var rightMenu = document.getElementById("rightMenu"),
+                    aUl = rightMenu.getElementsByTagName("ul"),
+                    aLi = rightMenu.getElementsByTagName("li");
+            var showTimer = null,
+                    hideTimer = null;
+            var maxWidth = 0,
+                    minWidth = 0;
+            var i = 0;
+
+            for (i = 0;i < aLi.length;i++) {
+                // 为含有子菜单的li加上箭头
+                aLi[i].getElementsByTagName("ul")[0] && (aLi[i].className = "sub");
+                // 鼠标移入时,加入active样式
+                aLi[i].onmouseover = function () {
+                    var oThis = this;
+
+                    oThis.className = this.className + " active";
+                    if(oThis.getElementsByTagName("ul")[0]){
+                        oThis.getElementsByTagName("ul")[0].style.display = "block";
+                    }
+                };
+                // 鼠标移除时
+                aLi[i].onmouseout = function () {
+                    this.className = this.className.replace(/\s?active/,"");
+                }
+            }
+            setWidth(aUl[0]);
+            // li中最大的宽度，并把赋值给同级所有li
+            function setWidth (obj) {
+                maxWidth = 0;
+                for (i = 0;i < obj.children.length;i++) {
+                    var oLi = obj.children[i];
+                    var oWidth = parseInt(oLi.currentStyle ? oLi.currentStyle : window.getComputedStyle(oLi,null).width);
+                    if (oWidth > maxWidth) {
+                        maxWidth = oWidth;
+                    }
+                }
+                for (i = 0;i < obj.children.length;i++) {
+                    obj.children[i].style.width = maxWidth + "px";
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+    <p>自定义右键菜单，请在页面点击右键查看效果。</p>
+    <div id="rightMenu">
+        <ul>
+            <li>
+                <strong>JavaScript学习</strong>
+            </li>
+            <li>
+                第一课
+                <ul>
+                    <li>网页特效原理分析</li>
+                    <li>响应用户操作</li>
+                    <li>提示框效果</li>
+                    <li>事件驱动</li>
+                    <li>元素属性操作</li>
+                </ul>
+            </li>
+            <li>
+                第二课
+                <ul>
+                    <li>改变网页背景颜色</li>
+                    <li>函数传参</li>
+                    <li>高重用性函数的编写</li>
+                    <li>126邮箱全选效果</li>
+                    <li>循环及偏历操作</li>
+                </ul>
+            </li>
+            <li>
+                第三课
+                <ul>
+                    <li>
+                        JavaScript组成
+                        <ul>
+                            <li>ECMAScript</li>
+                            <li>DOM</li>
+                            <li>BOM</li>
+                            <li>JavaScript兼容性来源</li>
+                        </ul>
+                    </li>
+                    <li>JavaScript出现的位置、优缺点</li>
+                    <li>变量、类型、typeof、数据类型转换、变量作用域</li>
+                    <li>
+                        闭包
+                        <ul>
+                            <li>什么是闭包</li>
+                            <li>简单应用</li>
+                            <li>闭包缺点</li>
+                        </ul>
+                    </li>
+                    <li>运算符</li>
+                    <li>程序流程控制</li>
+                    <li>
+                        定时器的使用
+                        <ul>
+                            <li>setInterval</li>
+                            <li>setTimeout</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
